@@ -661,7 +661,6 @@ func writeExpression(ctx *exprContext, sb *strings.Builder, x parser.Expr) error
 				}
 			}
 
-			sb.WriteString("coalesce(")
 			if err := writeExpressionMaybeParen(ctx, sb, x.X); err != nil {
 				return err
 			}
@@ -669,9 +668,7 @@ func writeExpression(ctx *exprContext, sb *strings.Builder, x parser.Expr) error
 			if err := writeExpressionMaybeParen(ctx, sb, x.Y); err != nil {
 				return err
 			}
-			sb.WriteString(", FALSE)")
 		case parser.TokenNE:
-			sb.WriteString("coalesce(")
 			if err := writeExpressionMaybeParen(ctx, sb, x.X); err != nil {
 				return err
 			}
@@ -679,7 +676,6 @@ func writeExpression(ctx *exprContext, sb *strings.Builder, x parser.Expr) error
 			if err := writeExpressionMaybeParen(ctx, sb, x.Y); err != nil {
 				return err
 			}
-			sb.WriteString(", FALSE)")
 		case parser.TokenCaseInsensitiveEq:
 			sb.WriteString("lower(")
 			if err := writeExpression(ctx, sb, x.X); err != nil {
@@ -958,11 +954,11 @@ func writeIfFunction(ctx *exprContext, sb *strings.Builder, x *parser.CallExpr) 
 			err: fmt.Errorf("%s(if, then, else) takes 3 arguments (got %d)", x.Func.Name, len(x.Args)),
 		}
 	}
-	sb.WriteString("CASE WHEN coalesce(")
+	sb.WriteString("CASE WHEN ")
 	if err := writeExpression(ctx, sb, x.Args[0]); err != nil {
 		return err
 	}
-	sb.WriteString(", FALSE) THEN ")
+	sb.WriteString(" THEN ")
 	if err := writeExpression(ctx, sb, x.Args[1]); err != nil {
 		return err
 	}
