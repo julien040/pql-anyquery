@@ -1,4 +1,4 @@
-module github.com/runreveal/pql
+module github.com/julien040/pql-anyquery
 
 go 1.21.6
 
